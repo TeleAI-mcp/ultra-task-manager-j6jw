@@ -1,0 +1,23 @@
+name: Close issues labeled wontfix
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  close-wontfix:
+    if: github.event.label.name == 'wontfix'
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              state: 'closed'
+            });
